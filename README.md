@@ -37,6 +37,14 @@ Source code of the artist recommender. Generally follows the components as discu
 
 The project includes a `Makefile` with the most common dataset generation workflows. By default, `make` uses `.venv/bin/python`, but you can override it with the `PYTHON` variable if needed.
 
+### Install dependencies
+
+The project includes a `requirements.txt` file in the repository root with the Python dependencies from the virtual environment.
+
+```bash
+pip install -r requirements.txt
+```
+
 ### Generate the sampled dataset
 
 ```bash
