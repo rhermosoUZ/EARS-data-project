@@ -1,19 +1,10 @@
-# Knowledge Graph Embedding-based Artist Recommender
-
-This project includes the complete recommender system implemented as part of Niels Bertram's master thesis.
-The following gives a quick overview of the project folders and its contents.
+# Music dataset from open data sources
+The dataset contains a collaborative music knowledge graph built from MusicBrainz and Last.fm, including users, artists, genres, labels, and areas, with listening and semantic relationships provided in CSV and GraphML formats.
 
 ## /dataset/db
 
 Contains the whole SQLite database as a single file. Can be loaded using sqlite3 and is accessed by the recommender system.
 
-## /embeddings
-
-Is where graph embeddings are stored. Includes the two main embeddings used for the final evaluation of the master thesis.
-
-## /evaluations
-
-Is where evaluation results are stored. Contains the full results of the evaluations conducted in terms of the master thesis. 
 
 ## /dataset/graph
 
