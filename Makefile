@@ -1,4 +1,4 @@
-PYTHON ?= venv/bin/python
+PYTHON ?= .venv/bin/python
 
 SAMPLE_SIZE ?= 0.05
 MIN_USER_PLAYS ?= 20000

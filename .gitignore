@@ -2,4 +2,4 @@
 resources/*
 *__pycache*
 dataset/*
-venv/
+.venv/
