@@ -55,7 +55,7 @@ class MusicGraph():
         print("Saving graph as graphML file ...")
         nx.write_graphml(self.G, path)
         print("Finished saving graph as graphML file ...")
-        self.draw_graph(self.G)
+        #self.draw_graph(self.G)
         
     def load_graph(self, path):
         print("Load graph from file")
