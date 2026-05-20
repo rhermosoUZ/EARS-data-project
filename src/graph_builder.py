@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import networkx as nx
 
 from data_builder import DataBuilder
@@ -51,19 +50,38 @@ class MusicGraph():
         print("Number of nodes: {}".format(self.G.number_of_nodes()))
         print("Number of edges: {}".format(self.G.number_of_edges()))
         
-    def save_graph(self, path):
+    def save_graph(self, path, draw=False, draw_path=None):
         print("Saving graph as graphML file ...")
         nx.write_graphml(self.G, path)
         print("Finished saving graph as graphML file ...")
-        self.draw_graph(self.G)
+        if draw:
+            self.draw_graph(self.G, output_file=draw_path, show=draw_path is None)
         
     def load_graph(self, path):
         print("Load graph from file")
         self.G = nx.read_graphml(path)
         
-    def draw_graph(self, graph):
-        nx.draw(self.G)
-        plt.show()
+    def draw_graph(self, graph=None, max_nodes=500, output_file=None, show=True):
+        graph = graph or self.G
+        node_count = graph.number_of_nodes()
+        edge_count = graph.number_of_edges()
+        if node_count > max_nodes:
+            print(
+                "Graph has {} nodes and {} edges. Skipping drawing because "
+                "NetworkX layout rendering is too slow for large graphs. "
+                "Use get_subgraph(...) or increase max_nodes to draw a smaller view."
+                .format(node_count, edge_count)
+            )
+            return
+
+        import matplotlib.pyplot as plt
+
+        nx.draw(graph, with_labels=False, node_size=20, width=0.2)
+        if output_file:
+            plt.savefig(output_file, dpi=150, bbox_inches="tight")
+        if show:
+            plt.show()
+        plt.close()
     
     def reduce_by_min_degree(self, min_degree=1):
         remove_nodes = [node for node, degree in dict(self.G.degree()).items() if degree < min_degree]
