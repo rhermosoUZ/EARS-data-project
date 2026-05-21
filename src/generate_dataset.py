@@ -39,9 +39,9 @@ def data_processing(user_sample_parameters=None):
     ### PROCESS LASTFM DATA AND SAVE DATA IN LOCAL DATABASE ###
 
     lfm = dp.LastFMProcessor()
+    lfm.clean_data()
     lfm.users()
     lfm.users_sample(**user_sample_parameters)
-    lfm.clean_data()
 
 
     ## SAMPLE LASTFM USERS INTO ANOTHER TABLE ###
@@ -118,7 +118,7 @@ def user_sample_parameters_from_args(args):
 
 if __name__ == '__main__':
     args = parse_args()
-    data_processing(user_sample_parameters_from_args(args))       # JD: does not finish when deleting Last.fm entries without appropriate MBIDs
+    data_processing(user_sample_parameters_from_args(args))
     if args.build_graph:
         knowledge_graph()
 

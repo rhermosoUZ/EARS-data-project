@@ -299,7 +299,7 @@ class LastFMProcessor:
         print(f"Loaded {len(valid_mbids)} MBIDs")
 
         input_file = path.lastfm + '/usersha1-artmbid-artname-plays.tsv'
-        output_file = path.lastfm + '/clean-usersha1-artmbid-artname-plays.tsv'
+        output_file = path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv'
 
         n = 0
 
@@ -328,8 +328,8 @@ class LastFMProcessor:
 
                         n += 1
 
-                        if n % 100000 == 0:
-                            print(f"---- {n}")
+                    #if n % 1000000 == 0:
+                        #print(f"---- {n}")
 
     def users(self, min_plays=500):
         """Create the user table with each row consisting of 
@@ -351,14 +351,14 @@ class LastFMProcessor:
         
         # For progress counter
         counter = 0
-        total_lines = 17559530 # line in lastfm file
+        #total_lines = 17559530 # line in lastfm file
         
-        with open(path.lastfm + '/clean-usersha1-artmbid-artname-plays.tsv') as tsv:
+        with open(path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 ############ PROGRESS COUNTER ##########
                 counter += 1
-                if (counter % 10000 == 0):
-                    print("{:10.2f}%".format((counter/total_lines)*100))
+                #if (counter % 1000000 == 0):
+               #     print("{:10.2f}%".format((counter/total_lines)*100))
                 ########################################
                 plays = int(line[3])
                 user_sha = line[0]
@@ -396,7 +396,7 @@ class LastFMProcessor:
         
         # Read tsv-file and save data in memory.
         users = {}
-        with open(path.lastfm + '/clean-usersha1-artmbid-artname-plays.tsv') as tsv:
+        with open(path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 user_sha = line[0]
                 artist_mbid = line[1]
