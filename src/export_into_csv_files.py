@@ -2,7 +2,6 @@ import argparse
 import csv
 import os
 from collections import defaultdict
-
 import path
 
 DEFAULT_GRAPHML_FILE = os.path.join(path.graph, "musicgraph.graphml")
@@ -89,6 +88,8 @@ def write_csv(csv_path, rows):
         writer.writerows(rows)
 
 
+
+
 if __name__ == "__main__":
     args = parse_args()
     export_graphml_to_csv(
@@ -97,3 +98,4 @@ if __name__ == "__main__":
         node_type_field=args.node_type_field,
         edge_type_field=args.edge_type_field,
     )
+    #remove_columns_from_csvs(args.output_dir)

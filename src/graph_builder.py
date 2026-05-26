@@ -51,7 +51,7 @@ class MusicGraph():
         print("Number of edges: {}".format(self.G.number_of_edges()))
 
     def save_graph(self, path, draw=False, draw_path=None):
-        print("Saving graph as graphML file ...")
+        print("Saving graph as graphML file ..." + path)
         nx.write_graphml(self.G, path)
         print("Finished saving graph as graphML file ...")
         if draw:
