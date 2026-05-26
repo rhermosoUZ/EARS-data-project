@@ -1,4 +1,14 @@
-PYTHON ?= .venv/bin/python
+PYTHON ?= $(if $(wildcard .venv/Scripts/python.exe),.venv/Scripts/python.exe,.venv/bin/python)
+
+# Ejemplos de ejecucion:
+#   make generate_dataset
+#   make generate_dataset SAMPLE_SIZE=0.1 MIN_USER_PLAYS=10000
+#   make generate_dataset_with_graph
+#   make generate_dataset_with_csv CSV_OUTPUT_DIR=dataset/csv_custom
+#   make export_csv GRAPHML_FILE=dataset/graph/musicgraph.graphml CSV_OUTPUT_DIR=dataset/csv
+#
+# En Windows, si necesitas forzar la ruta de Python, usa por ejemplo:
+#   make generate_dataset PYTHON=.venv/Scripts/python.exe
 
 SAMPLE_SIZE ?= 0.05
 MIN_USER_PLAYS ?= 20000
@@ -25,13 +35,7 @@ DATASET_ARGS = \
 .PHONY: generate_dataset
 generate_dataset:
 	$(PYTHON) src/generate_dataset.py $(DATASET_ARGS)
-	@if [ "$(EXPORT_CSV)" = "True" ] || [ "$(EXPORT_CSV)" = "true" ] || [ "$(EXPORT_CSV)" = "TRUE" ]; then \
-		$(PYTHON) src/export_into_csv_files.py \
-			--graphml-file "$(GRAPHML_FILE)" \
-			--output-dir "$(CSV_OUTPUT_DIR)" \
-			--node-type-field "$(NODE_TYPE_FIELD)" \
-			--edge-type-field "$(EDGE_TYPE_FIELD)"; \
-	fi
+	$(if $(filter True true TRUE,$(EXPORT_CSV)),$(PYTHON) src/export_into_csv_files.py --graphml-file "$(GRAPHML_FILE)" --output-dir "$(CSV_OUTPUT_DIR)" --node-type-field "$(NODE_TYPE_FIELD)" --edge-type-field "$(EDGE_TYPE_FIELD)")
 
 .PHONY: generate_dataset_with_graph
 generate_dataset_with_graph: GENERATE_GRAPH=True
