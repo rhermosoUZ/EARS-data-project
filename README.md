@@ -43,11 +43,33 @@ The project includes a `Makefile` with the most common dataset generation workfl
 
 ### Install dependencies
 
-The project includes a `requirements.txt` file in the repository root with the Python dependencies from the virtual environment.
+The repository does not include the Python virtual environment. If you want to use one, create it in the repository root with the name `.venv`. This creates a local `.venv` folder, which is ignored by git.
+
+Create the virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Activate it on Linux/macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+After activation, install the project dependencies from `requirements.txt`:
 
 ```bash
 pip install -r requirements.txt
 ```
+
+The `Makefile` is configured to use `.venv\Scripts\python.exe` on Windows when that file exists, or `.venv/bin/python` on Unix-like systems.
 
 ### Generate the sampled dataset
 
