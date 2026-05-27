@@ -23,6 +23,7 @@ GRAPHML_FILE ?= dataset/graph/musicgraph.graphml
 CSV_OUTPUT_DIR ?= dataset/csv
 NODE_TYPE_FIELD ?= type
 EDGE_TYPE_FIELD ?= relation
+CLEAN_CSV_CMD = $(PYTHON) src/clean_csv_files.py "$(CSV_OUTPUT_DIR)"
 
 DATASET_ARGS = \
 	--sample-size $(SAMPLE_SIZE) \
@@ -36,6 +37,7 @@ DATASET_ARGS = \
 generate_dataset:
 	$(PYTHON) src/generate_dataset.py $(DATASET_ARGS)
 	$(if $(filter True true TRUE,$(EXPORT_CSV)),$(PYTHON) src/export_into_csv_files.py --graphml-file "$(GRAPHML_FILE)" --output-dir "$(CSV_OUTPUT_DIR)" --node-type-field "$(NODE_TYPE_FIELD)" --edge-type-field "$(EDGE_TYPE_FIELD)")
+	$(if $(filter True true TRUE,$(EXPORT_CSV)),$(CLEAN_CSV_CMD))
 
 .PHONY: generate_dataset_with_graph
 generate_dataset_with_graph: GENERATE_GRAPH=True
@@ -50,3 +52,4 @@ generate_dataset_with_csv: generate_dataset
 export_csv:
 	$(if $(wildcard $(GRAPHML_FILE)),,$(error No existe GRAPHML_FILE="$(GRAPHML_FILE)". Genera el grafo con "make generate_dataset_with_graph" o indica otra ruta con GRAPHML_FILE=...))
 	$(PYTHON) src/export_into_csv_files.py --graphml-file "$(GRAPHML_FILE)" --output-dir "$(CSV_OUTPUT_DIR)" --node-type-field "$(NODE_TYPE_FIELD)" --edge-type-field "$(EDGE_TYPE_FIELD)"
+	$(CLEAN_CSV_CMD)

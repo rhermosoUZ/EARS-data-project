@@ -26,4 +26,5 @@ def remove_columns_from_csvs(directory):
             print(f"error at {csv_file.name}: {e}")
 
 if __name__ == "__main__":
-    remove_columns_from_csvs('../dataset/csv')
+    csv_directory = sys.argv[1] if len(sys.argv) > 1 else 'dataset/csv'
+    remove_columns_from_csvs(csv_directory)
