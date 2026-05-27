@@ -31,11 +31,11 @@ Contains produced results which were used for the master thesis. The folder is n
 
 ## /src
 
-Source code of the artist recommender. Generally follows the components as discussed in the master thesis. The generate_dataset.py script generates the sampled dataset used by the recommender, and export_into_csv_files.py exports GraphML nodes and edges into grouped CSV files under `dataset/csv`.
+Source code of the artist recommender. Generally follows the components as discussed in the master thesis. The generate_dataset.py script generates the sampled dataset used by the recommender, export_into_csv_files.py exports GraphML nodes and edges into grouped CSV files under `dataset/csv`, and clean_csv_files.py removes auxiliary columns from the generated CSV files.
 
 ## How to run
 
-The project includes a `Makefile` with the most common dataset generation workflows. By default, `make` uses `.venv/bin/python`, but you can override it with the `PYTHON` variable if needed.
+The project includes a `Makefile` with the most common dataset generation workflows. By default, `make` uses `.venv/bin/python` on Unix-like systems and `.venv\Scripts\python.exe` when a Windows virtual environment is detected. You can override it with the `PYTHON` variable if needed.
 
 ### Install dependencies
 
@@ -91,7 +91,13 @@ This is equivalent to:
 make generate_dataset GENERATE_GRAPH=True EXPORT_CSV=True
 ```
 
-It generates the dataset, builds the GraphML graph, and exports grouped node and edge CSV files under `dataset/csv`.
+It generates the dataset, builds the GraphML graph, exports grouped node and edge CSV files under `dataset/csv`, and then runs `src/clean_csv_files.py` automatically on that CSV output directory.
+
+The CSV cleanup removes auxiliary columns that are useful during export but not needed in the final CSV files:
+
+- `id`
+- `type`
+- `relation`
 
 ### Export CSV files from an existing graph
 
@@ -99,7 +105,7 @@ It generates the dataset, builds the GraphML graph, and exports grouped node and
 make export_csv
 ```
 
-This reads the GraphML file configured by `GRAPHML_FILE` and writes CSV files to `CSV_OUTPUT_DIR`. The defaults are:
+This reads the GraphML file configured by `GRAPHML_FILE`, writes CSV files to `CSV_OUTPUT_DIR`, and then runs `src/clean_csv_files.py` automatically on that output directory. The defaults are:
 
 - `GRAPHML_FILE=dataset/graph/musicgraph.graphml`
 - `CSV_OUTPUT_DIR=dataset/csv`
@@ -113,3 +119,30 @@ make export_csv GRAPHML_FILE=dataset/graph/custom.graphml CSV_OUTPUT_DIR=dataset
 ```
 
 Boolean Make variables accept `True`, `true`, or `TRUE`.
+
+### CSV cleanup
+
+The CSV cleanup can also be run manually:
+
+```bash
+python src/clean_csv_files.py dataset/csv
+```
+
+If no directory argument is provided, `clean_csv_files.py` uses `dataset/csv`.
+
+### Running Python scripts directly
+
+The `Makefile` is the recommended entry point because it passes the expected arguments and chains the export and cleanup steps. If you run the Python files directly, keep these differences in mind:
+
+- `src/generate_dataset.py` always processes the MusicBrainz and Last.fm input files and writes the SQLite database. It only builds GraphML files when `--build-graph` is passed.
+- `src/generate_dataset.py --build-graph` writes `dataset/graph/musicgraph.graphml` and `dataset/graph/lastfmgraph.graphml`.
+- `src/export_into_csv_files.py` only exports CSV files from a GraphML file. It does not clean the CSV files by itself when run directly.
+- `src/clean_csv_files.py` only cleans existing CSV files. It does not create GraphML or CSV exports.
+
+Examples:
+
+```bash
+python src/generate_dataset.py --sample-size 0.05 --build-graph
+python src/export_into_csv_files.py --graphml-file dataset/graph/musicgraph.graphml --output-dir dataset/csv
+python src/clean_csv_files.py dataset/csv
+```
