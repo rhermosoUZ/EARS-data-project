@@ -12,7 +12,7 @@ Is where the system stores knowledge graphs in graphml-format. Contains the pre-
 
 ## /resources
 
-Includes the datasets and the SQL-file for creating the full MusicBrainz Database Schema
+Includes the input datasets used by the processing scripts.
 
 ### /resources/lastfm
 
@@ -24,6 +24,10 @@ https://ocelma.net/MusicRecommendationDataset/lastfm-360K.html
 The mbdump and mbdump-derived data dumps from MusicBrainz. 
 Only the tables used by the recommender system are contained. The full data (~16GB) can be downloaded here:
 https://musicbrainz.org/doc/MusicBrainz_Database/Download
+
+## /schema
+
+Contains SQL schema files. `musicbrainz_CreateTables.sql` contains the SQL statements for creating the full MusicBrainz database schema.
 
 ## /results
 
