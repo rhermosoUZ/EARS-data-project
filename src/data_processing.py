@@ -3,6 +3,11 @@ import csv
 import random
 import path
 
+
+def open_tsv(file_path):
+    return open(file_path, newline='', encoding='utf-8')
+
+
 class MusicBrainzProcessor:
     """Class  for processing MusicBrainz data dump and
     inserting data into a local sqlite database.
@@ -23,7 +28,7 @@ class MusicBrainzProcessor:
 
         print("Populating artist table using MusicBrainz data ...")
 
-        with open(path.mbdump + '/artist') as tsv:
+        with open_tsv(path.mbdump + '/artist') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab'):
                 if line:
                     try:
@@ -52,7 +57,7 @@ class MusicBrainzProcessor:
 
         print("Populating artist_credits table using musicbrainz data ...")
 
-        with open(path.mbdump + '/artist_credit_name') as tsv:
+        with open_tsv(path.mbdump + '/artist_credit_name') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 self.cur.execute("INSERT INTO artist_credits VALUES (:artist_credit_id, :artist_id)", {
                                  "artist_credit_id": line[0], "artist_id": line[2]})
@@ -71,17 +76,17 @@ class MusicBrainzProcessor:
 
         print("Map releases to release year ...")
         release_to_year = {}
-        with open(path.mbdump + '/release_group_meta') as tsv:
+        with open_tsv(path.mbdump + '/release_group_meta') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab'):
                 release_to_year[int(line[0])] = line[2]
         
         has_secondary = [False for i in range(5000000)]
-        with open(path.mbdump + '/release_group_secondary_type_join') as tsv:
+        with open_tsv(path.mbdump + '/release_group_secondary_type_join') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab'):
                 has_secondary[int(line[0])] = True
                 
         has_official = [False for i in range(5000000)]
-        with open(path.mbdump + '/release') as tsv:
+        with open_tsv(path.mbdump + '/release') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 if (line[5] != '\\N'):
                     if (int(line[5]) == 1):
@@ -89,7 +94,7 @@ class MusicBrainzProcessor:
                 
         print("Populating album table using musicbrainz data ...")
 
-        with open(path.mbdump + '/release_group') as tsv:
+        with open_tsv(path.mbdump + '/release_group') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 if len(line) < 2:
                     continue
@@ -114,7 +119,7 @@ class MusicBrainzProcessor:
 
         print("Populating label table using musicbrainz data ...")
 
-        with open(path.mbdump + '/label') as tsv:
+        with open_tsv(path.mbdump + '/label') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 if len(line) < 1:
                     continue
@@ -139,7 +144,7 @@ class MusicBrainzProcessor:
 
         print("Populating area table using musicbrainz data ...")
 
-        with open(path.mbdump + '/area') as tsv:
+        with open_tsv(path.mbdump + '/area') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab'):
                 if line:
                     if (line[11] == "\\N"):
@@ -163,11 +168,11 @@ class MusicBrainzProcessor:
         print("Populating genres table using musicbrainz data ...")
         
         genre_set = set()
-        with open(path.mbdump + '/genre') as tsv:
+        with open_tsv(path.mbdump + '/genre') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 genre_set.add(line[2])
         
-        with open(path.mbdump + '/tag') as tsv:
+        with open_tsv(path.mbdump + '/tag') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 if (line[1] in genre_set):
                     self.cur.execute(
@@ -185,17 +190,17 @@ class MusicBrainzProcessor:
             "CREATE TABLE artist_genres (artist_id INTEGER, genre_id INT)")
 
         genre_set = set()
-        with open(path.mbdump + '/genre') as tsv:
+        with open_tsv(path.mbdump + '/genre') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 genre_set.add(line[2])
         
         genre_tag_map = {}
-        with open(path.mbdump + '/tag') as tsv:
+        with open_tsv(path.mbdump + '/tag') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 if (line[1] in genre_set):
                     genre_tag_map[line[0]] = line[1]
         
-        with open(path.mbdump + '/artist_tag') as tsv:
+        with open_tsv(path.mbdump + '/artist_tag') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 if len(line) < 1:
                     continue
@@ -220,7 +225,7 @@ class MusicBrainzProcessor:
         print("Populating member_of table using musicbrainz data ...")
 
         member_links = [False for i in range(1000000)]
-        with open(path.mbdump + '/link') as tsv:
+        with open_tsv(path.mbdump + '/link') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab'):
                 if (len(line) < 1):
                     continue
@@ -228,7 +233,7 @@ class MusicBrainzProcessor:
                     member_links[int(line[0])] = True
                     # member_links.append(line[0])
 
-        with open(path.mbdump + '/l_artist_artist') as tsv:
+        with open_tsv(path.mbdump + '/l_artist_artist') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab'):
                 if (len(line) < 1):
                     continue
@@ -252,7 +257,7 @@ class MusicBrainzProcessor:
         print("Mapping releases to albums ...")
         
         release_to_album = {}
-        with open(path.mbdump + '/release') as tsv:
+        with open_tsv(path.mbdump + '/release') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 if len(line) < 1:
                     continue
@@ -261,7 +266,7 @@ class MusicBrainzProcessor:
                 
         print("Populating album_label table using musicbrainz data ...")
 
-        with open(path.mbdump + '/release_label') as tsv:
+        with open_tsv(path.mbdump + '/release_label') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 if len(line) < 1:
                     continue
@@ -353,7 +358,7 @@ class LastFMProcessor:
         counter = 0
         #total_lines = 17559530 # line in lastfm file
         
-        with open(path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv') as tsv:
+        with open_tsv(path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 ############ PROGRESS COUNTER ##########
                 counter += 1
@@ -396,7 +401,7 @@ class LastFMProcessor:
         
         # Read tsv-file and save data in memory.
         users = {}
-        with open(path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv') as tsv:
+        with open_tsv(path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 user_sha = line[0]
                 artist_mbid = line[1]
