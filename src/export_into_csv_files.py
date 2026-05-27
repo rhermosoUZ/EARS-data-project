@@ -3,6 +3,7 @@ import csv
 import os
 from collections import defaultdict
 import path
+from clean_csv_files import remove_columns_from_csvs
 
 DEFAULT_GRAPHML_FILE = os.path.join(path.graph, "musicgraph.graphml")
 DEFAULT_OUTPUT_DIR = path.csv
@@ -98,4 +99,4 @@ if __name__ == "__main__":
         node_type_field=args.node_type_field,
         edge_type_field=args.edge_type_field,
     )
-    #remove_columns_from_csvs(args.output_dir)
+    remove_columns_from_csvs(args.output_dir)
