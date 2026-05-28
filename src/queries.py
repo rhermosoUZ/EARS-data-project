@@ -73,5 +73,5 @@ class UserSampleQueries():
         
     users_sample = '''
         SELECT user_sha, artist_mbid, plays 
-            FROM users_sample_train;
+            FROM users_sample;  
         '''

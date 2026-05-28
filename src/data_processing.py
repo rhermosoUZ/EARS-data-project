@@ -292,7 +292,7 @@ class LastFMProcessor:
         self.cur = self.con.cursor()
         
 
-    def clean_data(self):
+    def ensure_valid_MBIDs(self):
 
         print("Loading MBIDs into memory...")
 
@@ -336,7 +336,7 @@ class LastFMProcessor:
                     #if n % 1000000 == 0:
                         #print(f"---- {n}")
 
-    def users(self, min_plays=500):
+    def copy_user_profiles_to_db(self, min_plays=500):
         """Create the user table with each row consisting of 
         (user_sha, artist:mbid, plays) from the Last.fm dataset.
 
@@ -345,12 +345,12 @@ class LastFMProcessor:
             for an artist to be imported into the database. Defaults to 500.
         """
         
-        print("Creating users table ...")
+        print("Creating copy_user_profiles_to_db table ...")
 
-        # (Re)create users table 
-        self.cur.execute("DROP TABLE IF EXISTS users")
-        self.cur.execute("CREATE TABLE users (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
-        # self.cur.execute("CREATE INDEX artist_mbid ON users(artist_mbid)")
+        # (Re)create copy_user_profiles_to_db table
+        self.cur.execute("DROP TABLE IF EXISTS copy_user_profiles_to_db")
+        self.cur.execute("CREATE TABLE copy_user_profiles_to_db (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
+        # self.cur.execute("CREATE INDEX artist_mbid ON copy_user_profiles_to_db(artist_mbid)")
         
         print("Processing File ...")
         
@@ -370,11 +370,11 @@ class LastFMProcessor:
                 artist_mbid = line[1]
                 if(plays > min_plays):
                 #    if counter %10000 == 0:
-                    self.cur.execute("INSERT INTO users VALUES (?,?,?)", (user_sha, artist_mbid, plays))
+                    self.cur.execute("INSERT INTO copy_user_profiles_to_db VALUES (?,?,?)", (user_sha, artist_mbid, plays))
         
         self.con.commit()
 
-        print("Successfully created and populated users table.")
+        print("Successfully created and populated copy_user_profiles_to_db table.")
 
             
     def users_sample(self, sample_size=0.05, min_user_plays=20000, min_user_artists=40, artist_top_n=1, test_data_size=0.5):
@@ -394,9 +394,9 @@ class LastFMProcessor:
         self.cur.execute("DROP TABLE IF EXISTS users_sample")
         self.cur.execute("CREATE TABLE users_sample (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
         self.cur.execute("DROP TABLE IF EXISTS users_sample_train")
-        self.cur.execute("CREATE TABLE users_sample_train (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
+        #self.cur.execute("CREATE TABLE users_sample_train (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
         self.cur.execute("DROP TABLE IF EXISTS users_sample_test")
-        self.cur.execute("CREATE TABLE users_sample_test (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
+        #self.cur.execute("CREATE TABLE users_sample_test (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
         
         print("Reading Last.fm data file ...")
         
@@ -412,7 +412,7 @@ class LastFMProcessor:
                 users[user_sha]["artists"][artist_mbid] = plays
                 users[user_sha]["plays"] += plays
                 
-        print("Process users and insert to table ...")
+        print("Process copy_user_profiles_to_db and insert to table ...")
         
         for user in users:
             # sample user data by only using every record with x% chance
@@ -425,6 +425,12 @@ class LastFMProcessor:
                     fav_artists = sorted_artists[:int(len(sorted_artists)*artist_top_n)]
                     # shuffle artists and split into train/test set.
                     random.shuffle(fav_artists)
+                    for artist in fav_artists:
+                        plays = users[user]["artists"][artist]
+                        # Make sure that no field is empty
+                        if (user and artist and plays):
+                            self.cur.execute("INSERT INTO users_sample VALUES (?,?,?)", (user, artist, plays))
+                    '''
                     artist_len = len(fav_artists)
                     fav_artists_train = fav_artists[:int(artist_len*(1-test_data_size))]
                     fav_artists_test = fav_artists[int(artist_len*(test_data_size)):]
@@ -439,7 +445,7 @@ class LastFMProcessor:
                         if (user and artist and plays):
                             self.cur.execute("INSERT INTO users_sample_test VALUES (?,?,?)", (user, artist, plays))
                             self.cur.execute("INSERT INTO users_sample VALUES (?,?,?)", (user, artist, plays))
-        
+                    '''
         self.con.commit()
 
         print("Successfully created and populated users_sample table.")
@@ -460,8 +466,8 @@ if __name__ == '__main__':
     
     # Last.fm
     lfm = LastFMProcessor()
-    lfm.clean_data()
-    # lfm.users(min_plays=500)
+    lfm.ensure_valid_MBIDs()
+    # lfm.copy_user_profiles_to_db(min_plays=500)
     # lfm.users_sample(sample_size=0.05, min_user_plays=20000, artist_top_n=0.1)
     # lfm.users_sample(sample_size=0.05, min_user_plays=20000, min_user_artists=50, artist_top_n=0.4, test_data_size=0.5)
     lfm.close()

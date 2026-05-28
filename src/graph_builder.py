@@ -1,7 +1,7 @@
 import networkx as nx
 
 from data_builder import DataBuilder
-
+from collections import Counter
 
 class MusicGraph():
 
@@ -43,7 +43,7 @@ class MusicGraph():
             # self.G.add_nodes_from(self.db.md.albums)
             # self.G.add_edges_from(self.db.md.artist_album)
 
-        self.db.print_stats()
+        self.print_stats()
         print("Finished constructing graph ...")
 
     def print_stats(self):
@@ -95,10 +95,69 @@ class MusicGraph():
         subG = self.G.subgraph(sub_nodes)
         return subG
 
+    def count_nodes_of_type(self, node_type):
+         return sum(
+            1
+            for _, data in self.G.nodes(data=True)
+            if data.get("type") == node_type
+        )
+
+    def count_edges_between_types(self, type_a, type_b):
+        count = 0
+        for u, v in self.G.edges():
+            u_type = self.G.nodes[u].get("type")
+            v_type = self.G.nodes[v].get("type")
+
+            # count both directions
+            if (
+                    (u_type == type_a and v_type == type_b)
+                    or
+                    (u_type == type_b and v_type == type_a)
+            ):
+                count += 1
+        return count
+
+
+    def print_stats(self):
+        node_stats = {
+            'albums':self.count_nodes_of_type('album'),
+            'artists': self.count_nodes_of_type('artist'),
+            'copy_user_profiles_to_db': self.count_nodes_of_type('user'),
+            'areas': self.count_nodes_of_type('area'),
+            'labels': self.count_nodes_of_type('label'),
+            'genres': self.count_nodes_of_type('genre')
+        }
+        edge_stats = {
+            'artist_album': self.count_edges_between_types('artist', 'album'),
+            'user_artist': self.count_edges_between_types('user', 'artist'),
+            'artist_area': self.count_edges_between_types('artist', 'area'),
+            'artist_artist': self.count_edges_between_types('artist', 'artist'),
+            'artist_labels': self.count_edges_between_types('artist', 'label'),
+            'artist_genres': self.count_edges_between_types('artist', 'genre')
+        }
+        print("---------------------")
+        print("Graph Stats:")
+        print("---------------------")
+        print("Total Nodes:\t\t {}".format(sum(node_stats.values())))
+        print("Total Edges:\t\t {}".format(sum(edge_stats.values())))
+        print("---------------------")
+        print("# Albums:\t\t {}".format(node_stats['albums']))
+        print("# Artists:\t\t {}".format(node_stats['artists']))
+        print("# Users:\t\t {}".format(node_stats['copy_user_profiles_to_db']))
+        print("# Areas:\t\t {}".format(node_stats['areas']))
+        print("# Labels:\t\t {}".format(node_stats['labels']))
+        print("# Genres:\t\t {}".format(node_stats['genres']))
+        print("---------------------")
+        # print("# Artist-Album Relations:\t\t {}".format(edge_stats['artist_album']))
+        print("# User-Artist Relations:\t\t {}".format(edge_stats['user_artist']))
+        print("# Artist-Area Relations:\t\t {}".format(edge_stats['artist_area']))
+        print("# Artist-Artist Relations:\t\t {}".format(edge_stats['artist_artist']))
+        print("# Artist-Label Relations:\t\t {}".format(edge_stats['artist_labels']))
+        print("# Artist-Genre Relations:\t\t {}".format(edge_stats['artist_genres']))
 
 if __name__ == "__main__":
     mg = MusicGraph()
-    # mg.build_graph()
+    mg.build_graph()
     # mg.reduce_by_min_degree(min_degree=2)
     # time_string = datetime.now().isoformat().replace(":","").replace(".", "")[:-5]
     # mg.save_graph("dataset/graph/musicgraph_{}.graphml".format(time_string))

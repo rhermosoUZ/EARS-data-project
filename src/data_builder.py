@@ -47,7 +47,7 @@ class DataBuilder():
         self.md.artists.extend(artist_nodes)
     
     def store_users_as_nodes(self):
-        print("Store users as nodes ...")
+        print("Store copy_user_profiles_to_db as nodes ...")
         self.cur.execute(q.users_sample)
         users = self.cur.fetchall()
         user_nodes = [(user[0], {"type": "user", "user_sha": user[0]}) for user in users]
@@ -126,42 +126,7 @@ class DataBuilder():
     def close_connection(self):
         self.con.close()
         
-    def print_stats(self):
-        node_stats = {
-            'albums':len(self.md.albums),
-            'artists': len(self.md.artists),
-            'users': len(self.md.users),
-            'areas': len(self.md.areas),
-            'labels': len(self.md.labels),
-            'genres': len(self.md.genres)
-        }
-        edge_stats = {
-            'artist_album': len(self.md.artist_album),  
-            'user_artist': len(self.md.user_artist),
-            'artist_area': len(self.md.artist_area),
-            'artist_artist': len(self.md.artist_artist),
-            'artist_labels': len(self.md.artist_labels),
-            'artist_genres': len(self.md.artist_genres)
-        }
-        print("---------------------")
-        print("Graph Stats:")
-        print("---------------------")
-        print("Total Nodes:\t\t {}".format(sum(node_stats.values())))
-        print("Total Edges:\t\t {}".format(sum(edge_stats.values())))
-        print("---------------------")
-        print("# Albums:\t\t {}".format(node_stats['albums']))
-        print("# Artists:\t\t {}".format(node_stats['artists']))
-        print("# Users:\t\t {}".format(node_stats['users']))
-        print("# Areas:\t\t {}".format(node_stats['areas']))
-        print("# Labels:\t\t {}".format(node_stats['labels']))
-        print("# Genres:\t\t {}".format(node_stats['genres']))
-        print("---------------------")
-        # print("# Artist-Album Relations:\t\t {}".format(edge_stats['artist_album']))
-        print("# User-Artist Relations:\t\t {}".format(edge_stats['user_artist']))
-        print("# Artist-Area Relations:\t\t {}".format(edge_stats['artist_area']))
-        print("# Artist-Artist Relations:\t\t {}".format(edge_stats['artist_artist']))
-        print("# Artist-Label Relations:\t\t {}".format(edge_stats['artist_labels']))
-        print("# Artist-Genre Relations:\t\t {}".format(edge_stats['artist_genres']))
+
 
     
 class MusicData():

@@ -39,8 +39,8 @@ def data_processing(user_sample_parameters=None):
     ### PROCESS LASTFM DATA AND SAVE DATA IN LOCAL DATABASE ###
 
     lfm = dp.LastFMProcessor()
-    lfm.clean_data()
-    lfm.users()
+    lfm.ensure_valid_MBIDs()
+    lfm.copy_user_profiles_to_db(min_plays=500)
     lfm.users_sample(**user_sample_parameters)
 
 
@@ -60,9 +60,9 @@ def knowledge_graph():
 
     ### BUILD LASTFM ONLY GRAPH BASED ON SAMPLED USERS ###
 
-    mg = MusicGraph()
-    mg.build_graph(lastfmGraph=True)
-    mg.save_graph(path.graph + "/lastfmgraph.graphml")
+    #mg = MusicGraph()
+    #mg.build_graph(lastfmGraph=True)
+    #mg.save_graph(path.graph + "/lastfmgraph.graphml")
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -72,7 +72,7 @@ def parse_args():
         "--sample-size",
         type=float,
         default=DEFAULT_USER_SAMPLE_PARAMETERS["sample_size"],
-        help="Fraction of eligible users to sample. Default: %(default)s",
+        help="Fraction of eligible copy_user_profiles_to_db to sample. Default: %(default)s",
     )
     parser.add_argument(
         "--min-user-plays",
