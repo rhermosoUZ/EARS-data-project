@@ -304,7 +304,7 @@ class LastFMProcessor:
         print(f"Loaded {len(valid_mbids)} MBIDs")
 
         input_file = path.lastfm + '/usersha1-artmbid-artname-plays.tsv'
-        output_file = path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv'
+        output_file = path.lastfm + '/cleaned-usersha1-artmbid-artname-plays.tsv'
 
         n = 0
 
@@ -358,7 +358,7 @@ class LastFMProcessor:
         counter = 0
         #total_lines = 17559530 # line in lastfm file
         
-        with open_tsv(path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv') as tsv:
+        with open_tsv(path.lastfm + '/cleaned-usersha1-artmbid-artname-plays.tsv') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 ############ PROGRESS COUNTER ##########
                 counter += 1
@@ -402,7 +402,7 @@ class LastFMProcessor:
         
         # Read tsv-file and save data in memory.
         users = {}
-        with open_tsv(path.lastfm + '/sampled-usersha1-artmbid-artname-plays.tsv') as tsv:
+        with open_tsv(path.lastfm + '/cleaned-usersha1-artmbid-artname-plays.tsv') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 user_sha = line[0]
                 artist_mbid = line[1]
