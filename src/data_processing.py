@@ -375,6 +375,7 @@ class LastFMProcessor:
         self.con.commit()
 
         print("Successfully created and populated users table.")
+
             
     def users_sample(self, sample_size=0.05, min_user_plays=20000, min_user_artists=40, artist_top_n=1, test_data_size=0.5):
         """Create a sample of the user data to obtain more manageable sized data in a meaningful way.
