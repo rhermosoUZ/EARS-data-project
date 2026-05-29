@@ -3,7 +3,7 @@ import math
 import sqlite3
 import path
 
-#con = sqlite3.connect('dataset/db/musicbrainz.db')
+#con = sqlite3.connect('dataset/db/staging.db')
 con = sqlite3.connect(path.dbpath)
 
 def mbid_to_artistname(mbid):

@@ -8,7 +8,7 @@ graph = os.path.join(dataset, 'graph')
 csv = os.path.join(dataset, 'csv')
 
 # dont' change the following entries
-dbpath = os.path.join(db, 'musicbrainz.db')
+dbpath = os.path.join(db, 'staging.db')
 mbdump = os.path.join(home, 'resources', 'mbdump')
 lastfm = os.path.join(home, 'resources', 'lastfm')
 embeddings = os.path.join(home, 'embeddings')

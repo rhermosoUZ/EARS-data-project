@@ -6,7 +6,7 @@ This repository contains the code and schema files used to generate a collaborat
 The GitHub repository is intended to contain only lightweight, reproducible project files:
 
 - `/src`: Python source code for dataset generation, GraphML export, CSV export, and CSV cleanup.
-- `/schema`: SQL schema files. `musicbrainz_CreateTables.sql` contains the SQL statements for creating the full MusicBrainz database schema.
+- `/schema`: SQL schema files. `staging_CreateTables.sql` contains the SQL statements for creating the full MusicBrainz database schema.
 - `Makefile`: common workflows for generating the dataset, graphs, and CSV exports.
 - `requirements.txt`: Python dependencies.
 - `.gitignore`, `.gitattributes`, and this `README.md`.
