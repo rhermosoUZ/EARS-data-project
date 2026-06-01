@@ -40,7 +40,7 @@ def data_processing(user_sample_parameters=None):
 
     lfm = dp.LastFMProcessor()
     lfm.ensure_valid_MBIDs()
-    lfm.copy_user_profiles_to_db(min_plays=500)
+    #lfm.copy_user_profiles_to_db(min_plays=500)
     lfm.users_sample(**user_sample_parameters)
 
 

@@ -48,7 +48,7 @@ class DataBuilder():
     
     def store_users_as_nodes(self):
         print("Store copy_user_profiles_to_db as nodes ...")
-        self.cur.execute(q.users_sample)
+        self.cur.execute(q.user_listening_sampled)
         users = self.cur.fetchall()
         user_nodes = [(user[0], {"type": "user", "user_sha": user[0]}) for user in users]
         self.md.users.extend(user_nodes)
@@ -62,7 +62,7 @@ class DataBuilder():
 
     def store_user_artist_relation(self):
         print("Store user-artist relation ...")
-        self.cur.execute(q.users_sample)
+        self.cur.execute(q.user_listening_sampled)
         users = self.cur.fetchall()
         user_artist_relation = [(user[0], user[1], {"type": "relation", "relation": "favours_artist", "plays": user[2]}) for user in users]
         self.md.user_artist.extend(user_artist_relation)

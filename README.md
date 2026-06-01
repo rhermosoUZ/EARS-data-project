@@ -38,11 +38,11 @@ Contains generated outputs. This folder can be restored from the external datase
 
 #### /dataset/db
 
-Contains the generated SQLite database as a single file, `musicbrainz.db`. It can be loaded with sqlite3 and is used by the graph-building code.
+Contains the generated SQLite database as a single file, `staging.db`. It can be loaded with sqlite3 and is used by the graph-building code.
 
 #### /dataset/graph
 
-Contains generated knowledge graphs in GraphML format, including `musicgraph.graphml` and `lastfmgraph.graphml`.
+Contains generated knowledge graph in GraphML format, including `musicgraph.graphml`.
 
 #### /dataset/csv
 
@@ -96,10 +96,10 @@ resources/
     usersha1-artmbid-artname-plays.tsv
     usersha1-profile.tsv
   mbdump/
+    area
     artist
     artist_credit_name
     artist_tag
-    area
     genre
     label
     link
@@ -206,7 +206,7 @@ If no directory argument is provided, `clean_csv_files.py` uses `dataset/csv`.
 The `Makefile` is the recommended entry point because it passes the expected arguments and chains the export and cleanup steps. If you run the Python files directly, keep these differences in mind:
 
 - `src/generate_dataset.py` always processes the MusicBrainz and Last.fm input files and writes the SQLite database. It only builds GraphML files when `--build-graph` is passed.
-- `src/generate_dataset.py --build-graph` writes `dataset/graph/musicgraph.graphml` and `dataset/graph/lastfmgraph.graphml`.
+- `src/generate_dataset.py --build-graph` writes `dataset/graph/musicgraph.graphml`.
 - `src/export_into_csv_files.py` only exports CSV files from a GraphML file. It does not clean the CSV files by itself when run directly.
 - `src/clean_csv_files.py` only cleans existing CSV files. It does not create GraphML or CSV exports.
 

@@ -18,7 +18,7 @@ def remove_columns_from_csvs(directory):
             if existing_cols:
                 df = df.drop(columns=existing_cols)
                 df.to_csv(csv_file, index=False)
-                print(f"{csv_file.name}: removed -> {existing_cols}")
+                #print(f"{csv_file.name}: removed -> {existing_cols}")
             #else:
             #    print(f"{csv_file.name}: no columns found")
 
