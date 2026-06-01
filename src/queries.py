@@ -5,21 +5,21 @@ class UserSampleQueries():
 
     artists = '''
         SELECT DISTINCT a.id, a.mbid, a.name, a.area
-            FROM user_listening_sampled us
+            FROM listenings_sampled us
             INNER JOIN artists a ON us.artist_mbid = a.mbid;
         '''
 
           
     artist_areas = ''' 
         SELECT DISTINCT a.mbid AS artist_mbid, areas.name AS area
-            FROM user_listening_sampled us
+            FROM listenings_sampled us
             INNER JOIN artists a ON us.artist_mbid = a.mbid
             INNER JOIN areas ON a.area = areas.id;
     '''
         
     r_artist_album = '''
         SELECT DISTINCT a.mbid AS artist, al.mbid AS album
-            FROM user_listening_sampled us
+            FROM listenings_sampled us
             INNER JOIN artists a ON us.artist_mbid = a.mbid
             INNER JOIN artist_credits ac ON a.id = ac.artist_id
             INNER JOIN albums al ON ac.artist_credit_id = al.artist_credit_id;
@@ -30,13 +30,13 @@ class UserSampleQueries():
                 FROM member_of mo 
                 INNER JOIN artists a ON a.id = mo.artist_id 
                 INNER JOIN artists b ON b.id = mo.member_id
-                INNER JOIN user_listening_sampled us1 ON us1.artist_mbid = a.mbid
-                INNER JOIN user_listening_sampled us2 ON us2.artist_mbid = b.mbid
+                INNER JOIN listenings_sampled us1 ON us1.artist_mbid = a.mbid
+                INNER JOIN listenings_sampled us2 ON us2.artist_mbid = b.mbid
         '''
         
     labels = '''
         SELECT DISTINCT a.mbid AS artist_mbid, l.mbid AS label_mbid, l.name AS label_name
-            FROM user_listening_sampled us
+            FROM listenings_sampled us
             INNER JOIN artists a ON us.artist_mbid = a.mbid
             INNER JOIN artist_credits ac ON a.id = ac.artist_id
             INNER JOIN albums al ON ac.artist_credit_id = al.artist_credit_id
@@ -46,13 +46,13 @@ class UserSampleQueries():
         
     artist_genres = '''
         SELECT DISTINCT a.mbid AS artist, g.name AS genre
-            FROM user_listening_sampled us
+            FROM listenings_sampled us
             INNER JOIN artists a ON us.artist_mbid = a.mbid
             INNER JOIN artist_genres ag ON a.id = ag.artist_id
             INNER JOIN genres g ON ag.genre_id = g.id;
     '''
         
-    user_listening_sampled = '''
+    listenings_sampled = '''
         SELECT user_sha, artist_mbid, plays 
-            FROM user_listening_sampled;  
+            FROM listenings_sampled;  
         '''

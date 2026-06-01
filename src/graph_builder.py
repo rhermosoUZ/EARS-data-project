@@ -1,9 +1,8 @@
 import networkx as nx
 
 from data_builder import DataBuilder
-from collections import Counter
 
-class MusicGraph():
+class MusicGraph:
 
     def __init__(self, load_file=None) -> None:
         if load_file:
@@ -21,27 +20,21 @@ class MusicGraph():
         self.id_to_mbid = dict(zip(id_node_list, mbid_node_list))
         self.mbid_to_id = dict(zip(mbid_node_list, id_node_list))
 
-    def build_graph(self, lastfmGraph=False):
+    def build_graph(self):
         print("Construct graph ...")
-        if lastfmGraph:
-            self.db.store_lastfm()
-            self.G.add_nodes_from(self.db.md.artists)
-            self.G.add_nodes_from(self.db.md.users)
-            self.G.add_edges_from(self.db.md.user_artist)
-        else:
-            self.db.store_all()
-            self.G.add_nodes_from(self.db.md.artists)
-            self.G.add_nodes_from(self.db.md.users)
-            self.G.add_nodes_from(self.db.md.areas)
-            self.G.add_nodes_from(self.db.md.labels)
-            self.G.add_nodes_from(self.db.md.genres)
-            self.G.add_edges_from(self.db.md.artist_area)
-            self.G.add_edges_from(self.db.md.user_artist)
-            self.G.add_edges_from(self.db.md.artist_labels)
-            self.G.add_edges_from(self.db.md.artist_artist) # member_of
-            self.G.add_edges_from(self.db.md.artist_genres)
-            # self.G.add_nodes_from(self.db.md.albums)
-            # self.G.add_edges_from(self.db.md.artist_album)
+        self.db.store_all()
+        self.G.add_nodes_from(self.db.md.artists)
+        self.G.add_nodes_from(self.db.md.users)
+        self.G.add_nodes_from(self.db.md.areas)
+        self.G.add_nodes_from(self.db.md.labels)
+        self.G.add_nodes_from(self.db.md.genres)
+        self.G.add_edges_from(self.db.md.artist_area)
+        self.G.add_edges_from(self.db.md.user_artist)
+        self.G.add_edges_from(self.db.md.artist_labels)
+        self.G.add_edges_from(self.db.md.artist_artist) # member_of
+        self.G.add_edges_from(self.db.md.artist_genres)
+        # self.G.add_nodes_from(self.db.md.albums)
+        # self.G.add_edges_from(self.db.md.artist_album)
 
         self.print_stats()
         print("Finished constructing graph ...")

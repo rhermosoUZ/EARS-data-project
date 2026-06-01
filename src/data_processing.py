@@ -325,9 +325,9 @@ class LastFMProcessor:
             test_data_size (float, optional): The size of the test data to be stored in users_sample_test. Has to be in [0,1]. Defaults to 0.5.
         """
         
-        print("Creating user_listening_sampled table ...")
-        self.cur.execute("DROP TABLE IF EXISTS user_listening_sampled")
-        self.cur.execute("CREATE TABLE user_listening_sampled (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
+        print("Creating listening_sampled table ...")
+        self.cur.execute("DROP TABLE IF EXISTS listening_sampled")
+        self.cur.execute("CREATE TABLE listening_sampled (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
 
         print("Reading Last.fm data file ...")
         # Read tsv-file and save data in memory.
@@ -342,7 +342,7 @@ class LastFMProcessor:
                 users[user_sha]["artists"][artist_mbid] = plays
                 users[user_sha]["plays"] += plays
                 
-        print("Process copy_user_profiles_to_db and insert to table ...")
+        print("Process listenings and insert to table ...")
         for user in users:
             # sample user data by only using every record with x% chance
             if (random.random() <= sample_size):
@@ -358,7 +358,7 @@ class LastFMProcessor:
                         plays = users[user]["artists"][artist]
                         # Make sure that no field is empty
                         if (user and artist and plays):
-                            self.cur.execute("INSERT INTO user_listening_sampled VALUES (?,?,?)", (user, artist, plays))
+                            self.cur.execute("INSERT INTO listenings_sampled VALUES (?,?,?)", (user, artist, plays))
 
         self.con.commit()
         print("Successfully created and populated users_sample table.")

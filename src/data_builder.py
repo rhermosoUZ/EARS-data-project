@@ -8,11 +8,6 @@ class DataBuilder():
         self.con = sqlite3.connect(path.dbpath)
         self.cur = self.con.cursor()
         self.md = MusicData()
-    
-    def store_lastfm(self):
-        self.store_users_as_nodes()
-        self.store_user_artist_relation()
-        self.store_train_artists_as_nodes()
         
     def store_all(self):
         # self.store_albums_as_nodes()
@@ -38,17 +33,11 @@ class DataBuilder():
         artists = self.cur.fetchall()
         artist_nodes = [(artist[1], {"type": "artist", "mbid": artist[1], "name": artist[2]}) for artist in artists]
         self.md.artists.extend(artist_nodes)
-    
-    def store_train_artists_as_nodes(self):
-        print("Store artists as nodes ...")
-        self.cur.execute(q.training_artists)
-        artists = self.cur.fetchall()
-        artist_nodes = [(artist[1], {"type": "artist", "mbid": artist[1], "name": artist[2]}) for artist in artists]
-        self.md.artists.extend(artist_nodes)
+
     
     def store_users_as_nodes(self):
-        print("Store copy_user_profiles_to_db as nodes ...")
-        self.cur.execute(q.user_listening_sampled)
+        print("Storesampled users as nodes ...")
+        self.cur.execute(q.listenings_sampled)
         users = self.cur.fetchall()
         user_nodes = [(user[0], {"type": "user", "user_sha": user[0]}) for user in users]
         self.md.users.extend(user_nodes)
@@ -62,7 +51,7 @@ class DataBuilder():
 
     def store_user_artist_relation(self):
         print("Store user-artist relation ...")
-        self.cur.execute(q.user_listening_sampled)
+        self.cur.execute(q.listenings_sampled)
         users = self.cur.fetchall()
         user_artist_relation = [(user[0], user[1], {"type": "relation", "relation": "favours_artist", "plays": user[2]}) for user in users]
         self.md.user_artist.extend(user_artist_relation)
