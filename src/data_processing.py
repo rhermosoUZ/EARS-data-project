@@ -345,6 +345,7 @@ class LastFMProcessor:
         print("Process listenings and insert to table ...")
         for user in users:
             # sample user data by only using every record with x% chance
+            random.seed(42)
             if (random.random() <= sample_size):
                 user_total_plays = users[user]["plays"]
                 user_total_artists = len(users[user]['artists'])
