@@ -4,14 +4,10 @@ from data_builder import DataBuilder
 
 class MusicGraph:
 
-    def __init__(self, load_file=None) -> None:
-        if load_file:
-            print("Load graph from file")
-            self.G = nx.read_graphml(load_file)
-        else:
-            self.db = DataBuilder()
-            self.G = nx.Graph()
-            self.add_integer_ids()
+    def __init__(self) -> None:
+        self.db = DataBuilder()
+        self.G = nx.Graph()
+        self.add_integer_ids()
 
     def add_integer_ids(self):
         mbid_node_list = list(self.G.nodes)
@@ -147,6 +143,7 @@ class MusicGraph:
         print("# Artist-Artist Relations:\t\t {}".format(edge_stats['artist_artist']))
         print("# Artist-Label Relations:\t\t {}".format(edge_stats['artist_labels']))
         print("# Artist-Genre Relations:\t\t {}".format(edge_stats['artist_genres']))
+
 
 if __name__ == "__main__":
     mg = MusicGraph()
