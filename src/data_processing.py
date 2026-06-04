@@ -39,7 +39,7 @@ class MusicBrainzProcessor:
 
         self.cur.execute("DELETE FROM artists WHERE name = (?)", ("Various Artists",))
         self.cur.execute("DELETE FROM artists WHERE name = (?)", ("[unknown]",))
-        
+        self.cur.execute("DELETE FROM artists WHERE area IS NULL;")  ### new deletes all artist without area
         self.con.commit()
 
         print("Successfully created and populated artist table.")
@@ -58,7 +58,6 @@ class MusicBrainzProcessor:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 self.cur.execute("INSERT INTO artist_credits VALUES (:artist_credit_id, :artist_id)", {
                                  "artist_credit_id": line[0], "artist_id": line[2]})
-
         self.con.commit()
         print("Successfully created and populated artist_credit table.")
 
@@ -122,8 +121,11 @@ class MusicBrainzProcessor:
                             line[0]), line[1], line[2], int(line[10])))
         
         self.cur.execute("DELETE FROM labels WHERE name = (?)", ("no label",))
-        
+        #self.cur.execute("CREATE INDEX IF NOT EXISTS idx_artists_mbid ON artists(mbid)")
+        #self.cur.execute("CREATE INDEX IF NOT EXISTS idx_labels_mbid ON labels(mbid)")
         self.con.commit()
+        #self.cur.execute("DELETE FROM artists WHERE NOT EXISTS(SELECT 1 FROM labels WHERE labels.mbid = artists.mbid)")
+        #self.con.commit()
 
         print("Successfully created and populated label table.")
         print("")
