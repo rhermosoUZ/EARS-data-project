@@ -40,7 +40,7 @@ def data_processing(user_sample_parameters=None):
 
     lfm = dp.LastFMProcessor()
     lfm.ensure_valid_MBIDs()
-    #lfm.copy_user_profiles_to_db(min_plays=500)
+    lfm.fill_database_with_lastfm_data(min_plays=500)
     lfm.users_sample(**user_sample_parameters)
 
 
@@ -72,7 +72,7 @@ def parse_args():
         "--sample-size",
         type=float,
         default=DEFAULT_USER_SAMPLE_PARAMETERS["sample_size"],
-        help="Fraction of eligible copy_user_profiles_to_db to sample. Default: %(default)s",
+        help="Fraction of eligible fill_database_with_lastfm_data to sample. Default: %(default)s",
     )
     parser.add_argument(
         "--min-user-plays",

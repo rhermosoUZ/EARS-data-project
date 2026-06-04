@@ -282,7 +282,35 @@ class LastFMProcessor:
     def __init__(self) -> None:
         self.con = sqlite3.connect(path.dbpath)
         self.cur = self.con.cursor()
-        
+
+    def fill_database_with_lastfm_data(self, min_plays=500):
+        """Create the user table with each row consisting of
+        (user_sha, artist:mbid, plays) from the Last.fm dataset.
+
+        Args:
+            min_plays (int, optional): The minimum amount of plays a user has
+            for an artist to be imported into the database. Defaults to 500.
+        """
+
+        print("Creating listenings_all table ...")
+
+        # (Re)create listenings_all table
+        self.cur.execute("DROP TABLE IF EXISTS listenings_all")
+        self.cur.execute("CREATE TABLE listenings_all (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
+        # self.cur.execute("CREATE INDEX artist_mbid ON users(artist_mbid)")
+
+        print("Processing File ...")
+
+        with open(path.lastfm + '/cleaned-usersha1-artmbid-artname-plays.tsv') as tsv:
+            for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
+                plays = int(line[3])
+                user_sha = line[0]
+                artist_mbid = line[1]
+                if (plays > min_plays):
+                    self.cur.execute("INSERT INTO listenings_all VALUES (?,?,?)", (user_sha, artist_mbid, plays))
+        self.con.commit()
+
+
 
     def ensure_valid_MBIDs(self):
         print("Loading MBIDs into memory...")
@@ -328,8 +356,8 @@ class LastFMProcessor:
         """
         
         print("Creating listening_sampled table ...")
-        self.cur.execute("DROP TABLE IF EXISTS listening_sampled")
-        self.cur.execute("CREATE TABLE listening_sampled (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
+        self.cur.execute("DROP TABLE IF EXISTS listenings_sampled")
+        self.cur.execute("CREATE TABLE listenings_sampled (user_sha TEXT, artist_mbid TEXT, plays INTEGER)")
 
         print("Reading Last.fm data file ...")
         # Read tsv-file and save data in memory.
@@ -347,8 +375,8 @@ class LastFMProcessor:
         print("Process listenings and insert to table ...")
         for user in users:
             # sample user data by only using every record with x% chance
-            random.seed(42)
-            if (random.random() <= sample_size):
+            random_number = random.random()
+            if (random_number <= sample_size):
                 user_total_plays = users[user]["plays"]
                 user_total_artists = len(users[user]['artists'])
                 if (user_total_plays >= min_user_plays) and (user_total_artists >= min_user_artists):
@@ -364,7 +392,7 @@ class LastFMProcessor:
                             self.cur.execute("INSERT INTO listenings_sampled VALUES (?,?,?)", (user, artist, plays))
 
         self.con.commit()
-        print("Successfully created and populated users_sample table.")
+        print("Successfully created and populated listenings_sampled table.")
 
 
     def close(self):
@@ -384,7 +412,7 @@ if __name__ == '__main__':
     # Last.fm
     lfm = LastFMProcessor()
     lfm.ensure_valid_MBIDs()
-    # lfm.copy_user_profiles_to_db(min_plays=500)
+    # lfm.fill_database_with_lastfm_data(min_plays=500)
     # lfm.users_sample(sample_size=0.05, min_user_plays=20000, artist_top_n=0.1)
     # lfm.users_sample(sample_size=0.05, min_user_plays=20000, min_user_artists=50, artist_top_n=0.4, test_data_size=0.5)
     lfm.close()

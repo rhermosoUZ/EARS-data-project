@@ -111,7 +111,7 @@ class MusicGraph:
         node_stats = {
             'albums':self.count_nodes_of_type('album'),
             'artists': self.count_nodes_of_type('artist'),
-            'copy_user_profiles_to_db': self.count_nodes_of_type('user'),
+            'fill_database_with_lastfm_data': self.count_nodes_of_type('user'),
             'areas': self.count_nodes_of_type('area'),
             'labels': self.count_nodes_of_type('label'),
             'genres': self.count_nodes_of_type('genre')
@@ -132,7 +132,7 @@ class MusicGraph:
         print("---------------------")
         print("# Albums:\t\t {}".format(node_stats['albums']))
         print("# Artists:\t\t {}".format(node_stats['artists']))
-        print("# Users:\t\t {}".format(node_stats['copy_user_profiles_to_db']))
+        print("# Users:\t\t {}".format(node_stats['fill_database_with_lastfm_data']))
         print("# Areas:\t\t {}".format(node_stats['areas']))
         print("# Labels:\t\t {}".format(node_stats['labels']))
         print("# Genres:\t\t {}".format(node_stats['genres']))
