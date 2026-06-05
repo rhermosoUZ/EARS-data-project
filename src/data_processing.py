@@ -295,7 +295,7 @@ class LastFMProcessor:
 
         print("Processing File ...")
 
-        with open(path.lastfm + '/cleaned-usersha1-artmbid-artname-plays.tsv') as tsv:
+        with open_tsv(path.lastfm + '/cleaned-usersha1-artmbid-artname-plays.tsv') as tsv:
             for line in csv.reader(tsv, dialect='excel-tab', quoting=csv.QUOTE_NONE):
                 plays = int(line[3])
                 user_sha = line[0]
