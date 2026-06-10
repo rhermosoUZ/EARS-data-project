@@ -128,7 +128,6 @@ This runs `src/generate_dataset.py` with the default sampling and filtering valu
 - `MIN_USER_PLAYS=20000`
 - `MIN_USER_ARTISTS=40`
 - `ARTIST_TOP_N=1`
-- `TEST_DATA_SIZE=0.5`
 
 You can override any of these values directly from the command line:
 

@@ -30,7 +30,6 @@ DATASET_ARGS = \
 	--min-user-plays $(MIN_USER_PLAYS) \
 	--min-user-artists $(MIN_USER_ARTISTS) \
 	--artist-top-n $(ARTIST_TOP_N) \
-	--test-data-size $(TEST_DATA_SIZE) \
 	$(if $(filter True true TRUE,$(GENERATE_GRAPH)),--build-graph)
 
 .PHONY: generate_dataset

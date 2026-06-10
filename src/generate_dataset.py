@@ -9,8 +9,7 @@ DEFAULT_USER_SAMPLE_PARAMETERS = {
     'sample_size': 0.05,
     'min_user_plays': 20000,
     'min_user_artists': 40,
-    'artist_top_n': 1,
-    'test_data_size': 0.5,
+    'artist_top_n': 1
 }
 
 def data_processing(user_sample_parameters=None):
@@ -93,12 +92,6 @@ def parse_args():
         help="Fraction of each sampled user's top artists to keep. Default: %(default)s",
     )
     parser.add_argument(
-        "--test-data-size",
-        type=float,
-        default=DEFAULT_USER_SAMPLE_PARAMETERS["test_data_size"],
-        help="Fraction of each sampled user's artists reserved for test data. Default: %(default)s",
-    )
-    parser.add_argument(
         "--build-graph",
         action="store_true",
         help="Build graph files after data processing.",
@@ -111,7 +104,6 @@ def user_sample_parameters_from_args(args):
         "min_user_plays": args.min_user_plays,
         "min_user_artists": args.min_user_artists,
         "artist_top_n": args.artist_top_n,
-        "test_data_size": args.test_data_size,
     }
 
 
