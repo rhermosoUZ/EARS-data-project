@@ -48,7 +48,7 @@ if __name__ == "__main__":
     remove_columns_from_csvs(path)
 
     #rename columns
-    rename_csv_headers_inplace(path + 'edges_member_of.csv', {"source" :"artist_mbid", "target": "artist_mbid"})
+    rename_csv_headers_inplace(path + 'edges_member_of.csv', {"source" :"from_artist_mbid", "target": "to_artist_mbid"})
     rename_csv_headers_inplace(path + 'edges_hasLabel.csv', {"source": "artist_mbid", "target": "label_mbid"})
     rename_csv_headers_inplace(path + 'edges_hasGenre.csv', {"source": "artist_mbid", "target": "genre_name"})
     rename_csv_headers_inplace(path + 'edges_from_area.csv', {"source": "artist_mbid", "target": "area_name"})
